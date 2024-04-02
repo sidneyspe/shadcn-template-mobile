@@ -1,24 +1,35 @@
+import { forwardRef } from "react";
+import { Text, TextInput, View } from "react-native";
+
+import { cn } from "../lib/utils";
 import { colors } from "@/styles/colors";
-import { ReactNode } from "react";
-import { TextInput, View, TextInputProps } from "react-native";
 
-function Input({ children }: { children: ReactNode }) {
-  return (
-    <View className="w-full h-14 flex-row items-center gap-3 p-3 border border-green-400 rounded-lg">
-      {children}
+export interface InputProps
+  extends React.ComponentPropsWithoutRef<typeof TextInput> {
+  label?: string;
+  labelClasses?: string;
+  inputClasses?: string;
+}
+const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
+  ({ className, label, labelClasses, inputClasses, ...props }, ref) => (
+    <View className={cn("flex flex-col gap-1.5", className)}>
+      {label && (
+        <Text
+          className={cn("mb-1 text-base font-bold text-white", labelClasses)}
+        >
+          {label}
+        </Text>
+      )}
+      <TextInput
+        placeholderTextColor={colors.gray[400]}
+        className={cn(
+          inputClasses,
+          "rounded-lg bg-gray-600 px-4 py-2.5 text-white",
+        )}
+        {...props}
+      />
     </View>
-  )
-}
+  ),
+);
 
-function Field({ ...rest }: TextInputProps) {
-  return (
-    <TextInput
-      className="flex-1 text-white text-base font-regular"
-      placeholderTextColor={colors.gray[200]}
-      {...rest} />
-  )
-}
-
-Input.Field = Field
-
-export { Input }
+export { Input };

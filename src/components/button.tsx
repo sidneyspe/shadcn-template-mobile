@@ -1,26 +1,81 @@
-import { Text, TouchableOpacity, ActivityIndicator, TouchableOpacityProps } from "react-native";
+import { type VariantProps, cva } from "class-variance-authority";
+import { Text, TouchableOpacity } from "react-native";
 
+import { cn } from "../lib/utils";
 
-type Props = TouchableOpacityProps & {
-  title?: string
-  isLoading?: boolean
+const buttonVariants = cva(
+  "flex flex-row items-center justify-center rounded-md",
+  {
+    variants: {
+      variant: {
+        default: "bg-green-500",
+        secondary: "bg-secondary",
+        destructive: "bg-destructive",
+        ghost: "bg-slate-700",
+        link: "text-primary underline-offset-4",
+      },
+      size: {
+        default: "h-14 px-4",
+        sm: "h-8 px-2",
+        lg: "h-12 px-8",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
+const buttonTextVariants = cva("text-center font-medium", {
+  variants: {
+    variant: {
+      default: "text-black font-bold",
+      secondary: "text-secondary-foreground",
+      destructive: "text-destructive-foreground",
+      ghost: "text-primary-foreground",
+      link: "text-primary-foreground underline",
+    },
+    size: {
+      default: "text-lg",
+      sm: "text-sm",
+      lg: "text-xl",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    size: "default",
+  },
+});
+
+interface ButtonProps
+  extends React.ComponentPropsWithoutRef<typeof TouchableOpacity>,
+    VariantProps<typeof buttonVariants> {
+  label: string;
+  labelClasses?: string;
 }
-
-export function Button({ title, isLoading = false, ...rest }: Props) {
+function Button({
+  label,
+  labelClasses,
+  className,
+  variant,
+  size,
+  ...props
+}: ButtonProps) {
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
-      disabled={isLoading}
-      className="w-full h-14 bg-orange-500 items-center justify-center rounded-lg"
-      {...rest}
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
     >
-      {
-        isLoading ? <ActivityIndicator className="text-green-500" /> : (
-          <Text className="text-green-500 text-base font-bold uppercase">
-            {title}
-          </Text>
-        )
-      }
+      <Text
+        className={cn(
+          buttonTextVariants({ variant, size, className: labelClasses }),
+        )}
+      >
+        {label}
+      </Text>
     </TouchableOpacity>
-  )
+  );
 }
+
+export { Button, buttonVariants, buttonTextVariants };
