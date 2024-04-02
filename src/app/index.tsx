@@ -1,14 +1,14 @@
 import { Button } from "@/components/button";
-import { ButtonCustom } from "@/components/button-custom";
 import { Input } from "@/components/input";
-import { InputCustom } from "@/components/input-custom";
 import { Preferences } from "@/components/preferences";
 import { Skills } from "@/components/skills";
+import { useToast } from "@/components/toast";
 import { User } from "@/components/user";
 import React from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 
 export default function Home() {
+  const { toast } = useToast();
   return (
     <View className="flex-1 bg-gray-700 ">
       <ScrollView>
@@ -23,7 +23,7 @@ export default function Home() {
 
           <View className="mt-6 w-full flex-1">
             <Input placeholder="Company" inputClasses="mb-6" label="Company" />
-            <Button label="Save" />
+            <Button label="Save" onPress={() => toast("Saved!")} />
           </View>
         </View>
       </ScrollView>
